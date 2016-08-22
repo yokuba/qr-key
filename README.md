@@ -1,2 +1,2 @@
 # qr-key
-A QR code reader and generator for Android devices
+A QR code reader for Android devices
