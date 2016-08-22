@@ -16,6 +16,8 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import java.io.IOException;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -101,31 +103,45 @@ public class FullscreenActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
+//        This would be for a drawable asset
 
-        Bitmap myQRCode = null;
-        myQRCode = BitmapFactory.decodeResource(getResources(), R.drawable.myqrcode);
-
-
-
-        BarcodeDetector barcodeDetector =
-                new BarcodeDetector.Builder(this)
-                        .setBarcodeFormats(Barcode.QR_CODE)
-                        .build();
-
-        Frame myFrame = new Frame.Builder()
-                .setBitmap(myQRCode)
-                .build();
+//        Bitmap myQRCode = null;
+//        myQRCode = BitmapFactory.decodeResource(getResources(), R.drawable.myqrcode);
 
 
-        SparseArray<Barcode> barcodes = barcodeDetector.detect(myFrame);
-
-        if(barcodes.size() != 0) {
-
-            // Print the QR code's message
-            Log.d("My QR Code's Data",
-                    barcodes.valueAt(0).displayValue
+        try {
+            Bitmap myQRCode = null;
+            myQRCode = BitmapFactory.decodeStream(
+                    getAssets().open("myqrcode.jpg")
             );
+
+            BarcodeDetector barcodeDetector =
+                    new BarcodeDetector.Builder(this)
+                            .setBarcodeFormats(Barcode.QR_CODE)
+                            .build();
+
+            Frame myFrame = new Frame.Builder()
+                    .setBitmap(myQRCode)
+                    .build();
+
+            SparseArray<Barcode> barcodes = barcodeDetector.detect(myFrame);
+
+            if(barcodes.size() != 0) {
+
+                // Print the QR code's message
+                Log.d("My QR Code's Data",
+                        barcodes.valueAt(0).displayValue
+                );
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+
+
+
+
 
 
 
